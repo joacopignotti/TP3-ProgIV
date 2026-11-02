@@ -9,8 +9,11 @@ export class PedidoService {
 
   constructor(private productoService: ProductoService) {}
 
-  crear(items: unknown[], mesaId: number | null = null): Pedido {
+  crear(items: unknown[], mesaId: unknown = null): Pedido {
+    // Primero validamos los items y la mesa.
+    // Si alguno es inválido, no se crea ningún pedido.
     const itemsValidos = this.validarItems(items);
+    const mesaValidada = this.validarMesaId(mesaId);
 
     const total = itemsValidos.reduce(
       (acc, item) =>
@@ -25,7 +28,7 @@ export class PedidoService {
       itemsValidos,
       "pendiente",
       total,
-      mesaId,
+      mesaValidada,
     );
 
     this.pedidos = [...this.pedidos, pedido];
@@ -47,6 +50,24 @@ export class PedidoService {
     return pedido;
   }
 
+  private validarMesaId(mesaId: unknown): number | null {
+    // null o undefined significa retiro en barra.
+    if (mesaId === null || mesaId === undefined) {
+      return null;
+    }
+
+    // Solo se aceptan números enteros desde 1.
+    if (typeof mesaId !== "number" ||
+        !Number.isInteger(mesaId) ||
+        mesaId < 1) {
+      throw new ValidationError(
+        "mesaId debe ser un entero mayor o igual a 1",
+      );
+    }
+
+    return mesaId;
+  }
+
   private validarItems(items: unknown): ItemPedido[] {
     if (!Array.isArray(items) || items.length === 0) {
       throw new ValidationError("El pedido debe tener al menos un item");
@@ -56,7 +77,9 @@ export class PedidoService {
       const { productoId, cantidad } = (item ?? {}) as Record<string, unknown>;
 
       if (!Number.isInteger(productoId)) {
-        throw new ValidationError("Cada item debe tener un productoId entero");
+        throw new ValidationError(
+          "Cada item debe tener un productoId entero",
+        );
       }
 
       if (!Number.isInteger(cantidad) || (cantidad as number) < 1) {
