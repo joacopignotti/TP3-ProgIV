@@ -24,7 +24,7 @@ describe("API Cafetería Origen (integración)", () => {
       expect(res.body[0]).toMatchObject({
         id: 1,
         nombre: "Expreso Pocillo Brasil",
-        tipo: "Expreso",
+        tipo: "expreso",
         precioBase: 2500,
         precio: 5020,
       });
@@ -267,7 +267,7 @@ describe("API Cafetería Origen (integración)", () => {
 
       expect(res.status).toBe(200);
       expect(res.body).toEqual({
-        producto: "Pastelería",
+        producto: "pasteleria",
         cantidad: 5,
       });
     });

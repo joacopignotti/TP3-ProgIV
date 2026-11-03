@@ -12,15 +12,21 @@ const GRAMOS_FILTRADO: Readonly<Record<Tamano, number>> = {
 
 export class CafeFiltrado extends Cafe {
   constructor(
-        id: number,
-        tamano: Tamano,
-        variedad: Variedad
-    ) {
-    super(id, `Filtrado ${tamano} ${variedad.nombre}`, PRECIO_BASE_FILTRADO, tamano, variedad);
+    id: number,
+    tamano: Tamano,
+    variedad: Variedad,
+  ) {
+    super(
+      id,
+      `Filtrado ${tamano} ${variedad.nombre}`,
+      PRECIO_BASE_FILTRADO,
+      tamano,
+      variedad,
+    );
   }
 
   get tipo(): string {
-    return "Filtrado";
+    return "filtrado";
   }
 
   get gramos(): number {
