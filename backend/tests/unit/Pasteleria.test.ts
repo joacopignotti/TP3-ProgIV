@@ -13,7 +13,7 @@ describe('Clase Pasteleria', () => {
     it('debería retornar el tipo "Pastelería"', () => {
         const pasteleria = new Pasteleria(2, 'Cañoncito de dulce de leche', 900);
         
-        expect(pasteleria.tipo).toBe('Pastelería');
+        expect(pasteleria.tipo).toBe('pasteleria');
     });
 
     it('debería calcular el precio devolviendo exactamente el precio base', () => {
@@ -29,7 +29,7 @@ describe('Clase Pasteleria', () => {
         expect(dto).toEqual({
             id: 4,
             nombre: 'Alfajor de maicena',
-            tipo: 'Pastelería',
+            tipo: 'pasteleria',
             precioBase: 1200,
             precio: 1200, // En Pastelería el precio es igual al precioBase
         });

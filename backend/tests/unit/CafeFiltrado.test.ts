@@ -17,7 +17,7 @@ describe('Clase CafeFiltrado', () => {
         expect(filtrado.precioBase).toBe(PRECIO_BASE_FILTRADO); // 3200
         expect(filtrado.tamano).toBe('Mediano');
         expect(filtrado.variedad).toEqual(mockVariedad);
-        expect(filtrado.tipo).toBe('Filtrado');
+        expect(filtrado.tipo).toBe('filtrado');
     });
 
     it('debería retornar la cantidad de gramos correcta según el tamaño "Pocillo"', () => {
@@ -52,7 +52,7 @@ describe('Clase CafeFiltrado', () => {
         expect(dto).toEqual({
             id: 6,
             nombre: 'Filtrado Mediano Etiopía',
-            tipo: 'Filtrado',
+            tipo: 'filtrado',
             precioBase: 3200,
             precio: 3425, 
             tamano: 'Mediano',
