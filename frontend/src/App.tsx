@@ -1,35 +1,67 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { CarritoProvider, useCarrito } from "./context/CarritoContext";
+import Pasteleria from "./components/Pasteleria";
+import SelectorCafe from "./components/SelectorCafe";
 
-function App() {
-  const [count, setCount] = useState(0)
+function Contenido() {
+  const { carrito, agregarProducto } = useCarrito();
+
+  const productosCafe = [
+    // Acá después conectaremos los productos de la API.
+  ];
+
+  const productosPasteleria = [
+    {
+      id: 19,
+      nombre: "Muffin de chocolate",
+      tipo: "pasteleria",
+      precioBase: 2500,
+      precio: 2500,
+    },
+    {
+      id: 20,
+      nombre: "Porción de torta selva negra",
+      tipo: "pasteleria",
+      precioBase: 4200,
+      precio: 4200,
+    },
+  ];
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <main>
+      <h1>Cafetería Origen</h1>
+
+      <SelectorCafe
+        productos={productosCafe}
+        onAgregar={agregarProducto}
+      />
+
+      <Pasteleria
+        productos={productosPasteleria}
+        onAgregar={agregarProducto}
+      />
+
+      <section>
+        <h2>Carrito</h2>
+
+        {carrito.map((item) => (
+          <p key={item.producto.id}>
+            {item.producto.nombre} - Cantidad: {item.cantidad}
+          </p>
+        ))}
+      </section>
+    </main>
+  );
 }
 
-export default App
+function App() {
+  return (
+    <CarritoProvider>
+      <Contenido />
+    </CarritoProvider>
+  );
+}
+
+export default App;
+
+
