@@ -1,10 +1,12 @@
+
 import "./App.css";
 import { CarritoProvider, useCarrito } from "./context/CarritoContext";
 import Pasteleria from "./components/Pasteleria";
 import SelectorCafe from "./components/SelectorCafe";
+import Carrito from "./components/Carrito";
 
 function Contenido() {
-  const { carrito, agregarProducto } = useCarrito();
+  const { agregarProducto } = useCarrito();
 
   const productosCafe = [
     // Acá después conectaremos los productos de la API.
@@ -41,15 +43,7 @@ function Contenido() {
         onAgregar={agregarProducto}
       />
 
-      <section>
-        <h2>Carrito</h2>
-
-        {carrito.map((item) => (
-          <p key={item.producto.id}>
-            {item.producto.nombre} - Cantidad: {item.cantidad}
-          </p>
-        ))}
-      </section>
+      <Carrito />
     </main>
   );
 }
