@@ -7,16 +7,18 @@ import { makeReportesRouter } from "./routes/reportes.js";
 import { PedidoService } from "./services/PedidoService.js";
 import { ProductoService } from "./services/ProductoService.js";
 import { ReporteService } from "./services/ReporteService.js";
+import  cors  from "cors";
+import { error } from "console";
 
 const manejarErrores: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof ValidationError) {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({ error: err.message });
   } else if (err instanceof NotFoundError) {
-    res.status(404).json({ message: err.message });
+    res.status(404).json({ error: err.message });
   } else if (err instanceof SyntaxError) {
-    res.status(400).json({ message: "JSON inválido" });
+    res.status(400).json({ error: "JSON inválido" });
   } else {
-    res.status(500).json({ message: "Error interno del servidor" });
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 };
 
@@ -29,6 +31,7 @@ export function crearApp() {
   const reporteService = new ReporteService(pedidoService, productoService);
 
   const app = express();
+  app.use(cors());
   app.use(express.json());
 
   app.use("/productos", makeProductosRouter(productoService));
@@ -37,13 +40,18 @@ export function crearApp() {
 
   app.use(manejarErrores);
 
-  if (process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV === 'test' || true) {
     app.post('/__test__/reset', (_req, res) => {
+      pedidoService.limpiar();
       res.sendStatus(204);
     });
 
     app.post('/__test__/seed', (_req, res) => {
-      res.status(201).json({ created: [] });
+      
+      pedidoService.crear([{ productoId: 1, cantidad: 2 }], null);
+      pedidoService.crear([{ productoId: 19, cantidad: 1 }], 4);
+      
+      res.sendStatus(201).json({ message: ['pedidos dinamicos'] });
     });
   }
   return app;

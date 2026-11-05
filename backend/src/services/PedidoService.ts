@@ -49,6 +49,10 @@ export class PedidoService {
 
     return pedido;
   }
+  limpiar() {
+    this.pedidos = [];
+    this.siguienteId = 1;
+  }
 
   private validarMesaId(mesaId: unknown): number | null {
     // null o undefined significa retiro en barra.

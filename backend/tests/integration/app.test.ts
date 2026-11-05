@@ -49,7 +49,7 @@ describe("API Cafetería Origen (integración)", () => {
       const res = await request(app).get("/productos/999");
 
       expect(res.status).toBe(404);
-      expect(res.body).toHaveProperty("message");
+      expect(res.body).toHaveProperty("error");
     });
 
     it("responde 400 si el id no es un número", async () => {
@@ -129,7 +129,7 @@ describe("API Cafetería Origen (integración)", () => {
         .send(body);
 
       expect(res.status).toBe(400);
-      expect(res.body).toHaveProperty("message");
+      expect(res.body).toHaveProperty("error");
     });
 
     it("responde 400 si el JSON es inválido", async () => {
@@ -272,4 +272,42 @@ describe("API Cafetería Origen (integración)", () => {
       });
     });
   });
-});
+
+  // LIMPIAR PEDIDOS
+  describe("POST /__test__/reset", () => {
+    it("debería vaciar la lista de pedidos y devolver 204", async () => {
+      await request(app)
+        .post("/pedidos")
+        .send({
+          items: [{ productoId: 1, cantidad: 1 }],
+        });
+
+      const pedidosAntes = await request(app).get("/pedidos");
+      expect(pedidosAntes.body).toHaveLength(1);
+
+      const resReset = await request(app).post("/__test__/reset");
+      expect(resReset.status).toBe(204);
+
+      const pedidosDespues = await request(app).get("/pedidos");
+      expect(pedidosDespues.body).toHaveLength(0);
+    });
+  });
+
+  // Seed de datos de prueba
+
+  describe("POST /__test__/seed", () => {
+    it("debería cargar datos iniciales de prueba y devolver 201", async () => {
+      // 1. aseguramos de que esté vacío primero
+      await request(app).post("/__test__/reset");
+
+      // 2. Disparamos el seed
+      const resSeed = await request(app).post("/__test__/seed");
+      expect(resSeed.status).toBe(201);
+
+      // 3. Verificamos que ahora haya pedidos creados por el seed
+      const pedidos = await request(app).get("/pedidos");
+      expect(pedidos.body.length).toBeGreaterThan(0); // Esperamos que haya cargado algo
+    });
+  });
+})
+
