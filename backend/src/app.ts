@@ -7,6 +7,7 @@ import { makeReportesRouter } from "./routes/reportes.js";
 import { PedidoService } from "./services/PedidoService.js";
 import { ProductoService } from "./services/ProductoService.js";
 import { ReporteService } from "./services/ReporteService.js";
+import  cors  from "cors";
 import { error } from "console";
 
 const manejarErrores: ErrorRequestHandler = (err, _req, res, _next) => {
@@ -30,6 +31,7 @@ export function crearApp() {
   const reporteService = new ReporteService(pedidoService, productoService);
 
   const app = express();
+  app.use(cors());
   app.use(express.json());
 
   app.use("/productos", makeProductosRouter(productoService));
@@ -38,13 +40,14 @@ export function crearApp() {
 
   app.use(manejarErrores);
 
-  if (process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV === 'test' || true) {
     app.post('/__test__/reset', (_req, res) => {
+      pedidoService.limpiar();
       res.sendStatus(204);
     });
 
     app.post('/__test__/seed', (_req, res) => {
-      res.status(201).json({ created: [] });
+      res.status(201).json({ message: 'Datos de prueba cargados' });
     });
   }
   return app;
