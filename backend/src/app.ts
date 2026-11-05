@@ -7,16 +7,17 @@ import { makeReportesRouter } from "./routes/reportes.js";
 import { PedidoService } from "./services/PedidoService.js";
 import { ProductoService } from "./services/ProductoService.js";
 import { ReporteService } from "./services/ReporteService.js";
+import { error } from "console";
 
 const manejarErrores: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof ValidationError) {
-    res.status(400).json({ message: err.message });
+    res.status(400).json({ error: err.message });
   } else if (err instanceof NotFoundError) {
-    res.status(404).json({ message: err.message });
+    res.status(404).json({ error: err.message });
   } else if (err instanceof SyntaxError) {
-    res.status(400).json({ message: "JSON inválido" });
+    res.status(400).json({ error: "JSON inválido" });
   } else {
-    res.status(500).json({ message: "Error interno del servidor" });
+    res.status(500).json({ error: "Error interno del servidor" });
   }
 };
 
