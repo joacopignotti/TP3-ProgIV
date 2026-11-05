@@ -49,7 +49,7 @@ describe("API Cafetería Origen (integración)", () => {
       const res = await request(app).get("/productos/999");
 
       expect(res.status).toBe(404);
-      expect(res.body).toHaveProperty("message");
+      expect(res.body).toHaveProperty("error");
     });
 
     it("responde 400 si el id no es un número", async () => {
@@ -129,7 +129,7 @@ describe("API Cafetería Origen (integración)", () => {
         .send(body);
 
       expect(res.status).toBe(400);
-      expect(res.body).toHaveProperty("message");
+      expect(res.body).toHaveProperty("error");
     });
 
     it("responde 400 si el JSON es inválido", async () => {
