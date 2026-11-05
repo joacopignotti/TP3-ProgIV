@@ -47,7 +47,11 @@ export function crearApp() {
     });
 
     app.post('/__test__/seed', (_req, res) => {
-      res.status(201).json({ message: 'Datos de prueba cargados' });
+      
+      pedidoService.crear([{ productoId: 1, cantidad: 2 }], null);
+      pedidoService.crear([{ productoId: 19, cantidad: 1 }], 4);
+      
+      res.sendStatus(201).json({ message: ['pedidos dinamicos'] });
     });
   }
   return app;
