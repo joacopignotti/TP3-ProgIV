@@ -272,4 +272,24 @@ describe("API Cafetería Origen (integración)", () => {
       });
     });
   });
-});
+  describe("POST /__test__/reset", () => {
+    it("debería vaciar la lista de pedidos y devolver 204", async () => {
+      await request(app)
+        .post("/pedidos")
+        .send({
+          items: [{ productoId: 1, cantidad: 1 }],
+        });
+
+      const pedidosAntes = await request(app).get("/pedidos");
+      expect(pedidosAntes.body).toHaveLength(1);
+
+      const resReset = await request(app).post("/__test__/reset");
+      expect(resReset.status).toBe(204);
+
+      const pedidosDespues = await request(app).get("/pedidos");
+      expect(pedidosDespues.body).toHaveLength(0);
+    });
+  });
+
+})
+
