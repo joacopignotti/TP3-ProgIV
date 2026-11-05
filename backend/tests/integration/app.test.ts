@@ -272,6 +272,8 @@ describe("API Cafetería Origen (integración)", () => {
       });
     });
   });
+
+  // LIMPIAR PEDIDOS
   describe("POST /__test__/reset", () => {
     it("debería vaciar la lista de pedidos y devolver 204", async () => {
       await request(app)
@@ -291,5 +293,21 @@ describe("API Cafetería Origen (integración)", () => {
     });
   });
 
+  // Seed de datos de prueba
+
+  describe("POST /__test__/seed", () => {
+    it("debería cargar datos iniciales de prueba y devolver 201", async () => {
+      // 1. aseguramos de que esté vacío primero
+      await request(app).post("/__test__/reset");
+
+      // 2. Disparamos el seed
+      const resSeed = await request(app).post("/__test__/seed");
+      expect(resSeed.status).toBe(201);
+
+      // 3. Verificamos que ahora haya pedidos creados por el seed
+      const pedidos = await request(app).get("/pedidos");
+      expect(pedidos.body.length).toBeGreaterThan(0); // Esperamos que haya cargado algo
+    });
+  });
 })
 
