@@ -1,35 +1,33 @@
-type Producto = {
-  id: number;
-  nombre: string;
-  tipo: string;
-  precioBase: number;
-  precio: number;
-};
+
+import type { Producto } from "../schemas/producto.schema";
 
 type PasteleriaProps = {
   productos: Producto[];
   onAgregar: (producto: Producto) => void;
 };
 
-export default function Pasteleria({
-  productos,
-  onAgregar,
-}: PasteleriaProps) {
+export default function Pasteleria({ productos, onAgregar }: PasteleriaProps) {
   return (
-    <section>
+    <section className="pasteleria">
       <h2>Pastelería</h2>
+      <p className="pasteleria-descripcion">
+        Algo dulce para acompañar tu café.
+      </p>
 
-      <div>
+      <div className="pasteleria-lista">
         {productos.map((producto) => (
-          <article key={producto.id}>
+          <article className="pasteleria-producto" key={producto.id}>
             <h3>{producto.nombre}</h3>
 
-            <p>${producto.precio}</p>
+            <div className="pasteleria-precio">
+              ${producto.precio.toLocaleString("es-AR")}
+            </div>
 
-            <button onClick={() => onAgregar(producto)}>
-              {producto.nombre.toLowerCase().includes("muffin")
-                ? "Agregar muffin"
-                : "Agregar selva negra"}
+            <button
+              type="button"
+              onClick={() => onAgregar(producto)}
+            >
+              Agregar al carrito
             </button>
           </article>
         ))}
