@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { obtenerProductos } from '../../api/client';
+import { obtenerProductos } from '../../api/client.ts';
 
 describe('obtenerProductos', () => {
     it('devuelve los productos cuando la API responde correctamente', async () => {

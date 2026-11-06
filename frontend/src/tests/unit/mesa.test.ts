@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { obtenerMesaDesdeURL } from '../../utils/mesa';
+import { obtenerMesaDesdeURL } from '../../utils/mesa.ts';
 
 describe('obtenerMesaDesdeURL', () => {
     it('devuelve el número de mesa si la query es válida', () => {

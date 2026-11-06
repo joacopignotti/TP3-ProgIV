@@ -1,5 +1,4 @@
-import { ListadoProductosSchema, Producto } from '../schemas/producto.schema';
-
+import { ListadoProductosSchema, type Producto } from '../schemas/producto.schema';
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 export async function obtenerProductos(): Promise<Producto[]> {
