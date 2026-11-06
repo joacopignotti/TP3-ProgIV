@@ -37,6 +37,84 @@ main h2 {
   font-family: Georgia, serif;
 }
 
+/* SELECTOR DE CAFE */
+
+main > section:not(.carrito) > div {
+  margin-bottom: 18px;
+}
+
+main > section:not(.carrito) > div label {
+  display: block;
+  margin-bottom: 7px;
+  color: #513728;
+  font-weight: 600;
+}
+
+main select {
+  width: 100%;
+  max-width: 350px;
+  padding: 11px 12px;
+  border: 1px solid #ded2c7;
+  border-radius: 9px;
+  background: #faf8f5;
+  color: #443329;
+  font: inherit;
+  cursor: pointer;
+}
+
+main select:focus {
+  outline: 2px solid #b58b6b;
+  border-color: #76513b;
+}
+
+main fieldset {
+  border: none;
+  padding: 0;
+  margin: 22px 0;
+}
+
+main fieldset legend {
+  color: #513728;
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 14px;
+}
+
+main fieldset label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  border: 1px solid #e7ddd4;
+  border-radius: 12px;
+  background: #faf8f5;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+main fieldset label:hover {
+  border-color: #b58b6b;
+  transform: translateY(-2px);
+}
+
+main fieldset label:has(input:checked) {
+  border: 2px solid #76513b;
+  background: #f3ece5;
+  color: #513728;
+  font-weight: bold;
+}
+
+main fieldset input[type="radio"] {
+  accent-color: #76513b;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* BOTONES */
+
 main button {
   border: none;
   border-radius: 8px;
@@ -56,6 +134,16 @@ main button:hover:not(:disabled) {
 main button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* PASTELERIA */
+
+main > section:not(.carrito) article {
+  padding: 12px 0;
+}
+
+main > section:not(.carrito) article h3 {
+  color: #513728;
 }
 
 /* CARRITO */
@@ -194,6 +282,8 @@ main button.boton-eliminar:hover {
   font-size: 1.5rem;
 }
 
+/* RESPONSIVE */
+
 @media (max-width: 600px) {
   #root {
     padding: 24px 14px;
@@ -201,6 +291,18 @@ main button.boton-eliminar:hover {
 
   main > h1 {
     font-size: 2.2rem;
+  }
+
+  main > section:not(.carrito) {
+    padding: 22px 18px;
+  }
+
+  main select {
+    max-width: 100%;
+  }
+
+  main fieldset label {
+    padding: 13px;
   }
 
   .carrito {
@@ -221,6 +323,173 @@ main button.boton-eliminar:hover {
 
   .item-acciones strong {
     min-width: auto;
+  }
+}
+
+
+/* PASTELERIA */
+
+.pasteleria h2 {
+  margin-bottom: 8px;
+}
+
+.pasteleria-descripcion {
+  color: #927c6d;
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+.pasteleria-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.pasteleria-producto {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #eee5dc;
+  border-radius: 14px;
+  background: #faf8f5;
+}
+
+.pasteleria-producto h3 {
+  margin: 0 0 14px;
+  color: #513728;
+  font-size: 1.05rem;
+}
+
+.pasteleria-precio {
+  margin: 0;
+  color: #76513b;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.pasteleria-producto button {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .pasteleria-lista {
+    grid-template-columns: 1fr;
+  }
+
+  .pasteleria-producto {
+    padding: 18px;
+  }
+}
+
+
+
+/* AJUSTE FINAL DE PASTELERIA */
+
+main .pasteleria .pasteleria-lista {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+main .pasteleria .pasteleria-producto {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 20px;
+  padding: 28px 22px;
+  border: 1px solid #eee3d8;
+  border-radius: 16px;
+  background: #faf7f3;
+}
+
+main .pasteleria .pasteleria-producto h3 {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #513728;
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+main .pasteleria .pasteleria-precio {
+  display: inline-block;
+  padding: 9px 24px;
+  border-radius: 30px;
+  background: #efe6dd;
+  color: #76513b;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+main .pasteleria .pasteleria-producto button {
+  width: auto;
+  min-width: 180px;
+  padding: 11px 22px;
+}
+
+@media (max-width: 600px) {
+  main .pasteleria .pasteleria-lista {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+/* DESPLEGABLES DEL SELECTOR */
+
+main > section:not(.carrito) select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  max-width: 420px;
+  height: 48px;
+  padding: 0 42px 0 16px;
+  border: 1px solid #e5d8cc;
+  border-radius: 11px;
+  background-color: #faf7f3;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2376513b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  color: #513728;
+  font-family: Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+main > section:not(.carrito) select:hover {
+  border-color: #b58b6b;
+  background-color: #f5eee7;
+}
+
+main > section:not(.carrito) select:focus {
+  outline: none;
+  border-color: #76513b;
+  box-shadow: 0 0 0 3px rgba(118, 81, 59, 0.13);
+}
+
+main > section:not(.carrito) > div label {
+  display: block;
+  margin-bottom: 9px;
+  color: #513728;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  main > section:not(.carrito) select {
+    max-width: 100%;
   }
 }
 
