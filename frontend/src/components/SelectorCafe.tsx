@@ -12,16 +12,17 @@ function SelectorCafe({ productos, onAgregar }: SelectorCafeProps) {
   const [tamano, setTamano] = useState("");
   const [origen, setOrigen] = useState("");
 
-  const productoSeleccionado = productos.find(
+  const productosDisponibles = productos.filter(
     (producto) =>
       producto.tipo === bebida &&
-      producto.tamano === tamano &&
-      producto.variedad === origen
+      producto.tamano === tamano
   );
 
-  const puedeAgregar = Boolean(
-    bebida && tamano && origen && productoSeleccionado
+  const productoSeleccionado = productosDisponibles.find(
+    (producto) => producto.variedad === origen
   );
+
+  const puedeAgregar = Boolean(productoSeleccionado);
 
   function agregarProducto() {
     if (productoSeleccionado) {
@@ -38,7 +39,10 @@ function SelectorCafe({ productos, onAgregar }: SelectorCafeProps) {
         <select
           id="bebida"
           value={bebida}
-          onChange={(e) => setBebida(e.target.value)}
+          onChange={(e) => {
+            setBebida(e.target.value);
+            setOrigen("");
+          }}
         >
           <option value="">Seleccioná una bebida</option>
           <option value="expreso">Expreso</option>
@@ -51,7 +55,10 @@ function SelectorCafe({ productos, onAgregar }: SelectorCafeProps) {
         <select
           id="tamano"
           value={tamano}
-          onChange={(e) => setTamano(e.target.value)}
+          onChange={(e) => {
+            setTamano(e.target.value);
+            setOrigen("");
+          }}
         >
           <option value="">Seleccioná un tamaño</option>
           <option value="Pocillo">Pocillo</option>
@@ -60,22 +67,28 @@ function SelectorCafe({ productos, onAgregar }: SelectorCafeProps) {
         </select>
       </div>
 
-      <div>
-        <label htmlFor="origen">Origen</label>
-        <select
-          id="origen"
-          value={origen}
-          onChange={(e) => setOrigen(e.target.value)}
-        >
-          <option value="">Seleccioná un origen</option>
-          <option value="Brasil">Brasil</option>
-          <option value="Colombia">Colombia</option>
-          <option value="Etiopía">Etiopía</option>
-        </select>
-      </div>
+      {bebida && tamano && (
+        <fieldset>
+          <legend>Elegí un origen</legend>
 
-      {productoSeleccionado && (
-        <p>Precio: ${productoSeleccionado.precio}</p>
+          {productosDisponibles.map((producto) => (
+            <label key={producto.id}>
+              <input
+                type="radio"
+                name="origen"
+                value={producto.variedad}
+                checked={origen === producto.variedad}
+                onChange={() => setOrigen(producto.variedad ?? "")}
+              />
+
+              {producto.variedad} - ${producto.precio.toLocaleString("es-AR")}
+            </label>
+          ))}
+
+          {productosDisponibles.length === 0 && (
+            <p>No hay cafés disponibles para esta selección.</p>
+          )}
+        </fieldset>
       )}
 
       <button
@@ -90,5 +103,3 @@ function SelectorCafe({ productos, onAgregar }: SelectorCafeProps) {
 }
 
 export default SelectorCafe;
-
-
