@@ -1,17 +1,6 @@
 
 import { useState } from "react";
-
-type Producto = {
-  id: number;
-  nombre: string;
-  tipo: string;
-  precioBase: number;
-  precio: number;
-  tamano: string;
-  variedad: string;
-  gramos: number;
-  costoCafe: number;
-};
+import type { Producto } from "../schemas/producto.schema";
 
 type SelectorCafeProps = {
   productos: Producto[];
@@ -86,9 +75,7 @@ function SelectorCafe({ productos, onAgregar }: SelectorCafeProps) {
       </div>
 
       {productoSeleccionado && (
-        <p>
-          Precio: ${productoSeleccionado.precio}
-        </p>
+        <p>Precio: ${productoSeleccionado.precio}</p>
       )}
 
       <button

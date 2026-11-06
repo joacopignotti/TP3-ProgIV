@@ -1,10 +1,5 @@
-type Producto = {
-  id: number;
-  nombre: string;
-  tipo: string;
-  precioBase: number;
-  precio: number;
-};
+
+import type { Producto } from "../schemas/producto.schema";
 
 type PasteleriaProps = {
   productos: Producto[];
@@ -37,3 +32,5 @@ export default function Pasteleria({
     </section>
   );
 }
+
+

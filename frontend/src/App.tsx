@@ -1,33 +1,51 @@
 
+import { useEffect, useState } from "react";
 import "./App.css";
+
 import { CarritoProvider, useCarrito } from "./context/CarritoContext";
 import Pasteleria from "./components/Pasteleria";
 import SelectorCafe from "./components/SelectorCafe";
 import Carrito from "./components/Carrito";
 
+import { obtenerProductos } from "./api/client";
+import type { Producto } from "./schemas/producto.schema";
+
 function Contenido() {
   const { agregarProducto } = useCarrito();
 
-  const productosCafe = [
-    // Acá después conectaremos los productos de la API.
-  ];
+  const [productos, setProductos] = useState<Producto[]>([]);
+  const [error, setError] = useState("");
+  const [cargando, setCargando] = useState(true);
 
-  const productosPasteleria = [
-    {
-      id: 19,
-      nombre: "Muffin de chocolate",
-      tipo: "pasteleria",
-      precioBase: 2500,
-      precio: 2500,
-    },
-    {
-      id: 20,
-      nombre: "Porción de torta selva negra",
-      tipo: "pasteleria",
-      precioBase: 4200,
-      precio: 4200,
-    },
-  ];
+  useEffect(() => {
+    obtenerProductos()
+      .then((datos) => {
+        setProductos(datos);
+      })
+      .catch((error) => {
+        setError(error.message);
+      })
+      .finally(() => {
+        setCargando(false);
+      });
+  }, []);
+
+  const productosCafe = productos.filter(
+    (producto) =>
+      producto.tipo === "expreso" || producto.tipo === "filtrado"
+  );
+
+  const productosPasteleria = productos.filter(
+    (producto) => producto.tipo === "pasteleria"
+  );
+
+  if (cargando) {
+    return <p>Cargando productos...</p>;
+  }
+
+  if (error) {
+    return <p>Error al cargar los productos: {error}</p>;
+  }
 
   return (
     <main>
@@ -57,5 +75,6 @@ function App() {
 }
 
 export default App;
+
 
 
