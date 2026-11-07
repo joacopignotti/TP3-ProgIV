@@ -1,197 +1,455 @@
-# Cafetería Origen — Menú de Mesa (TP3)
+# ☕ Cafetería Origen — Trabajo Práctico 3
 
-Aplicación web para la toma de pedidos en mesa mediante escaneo de código QR en la Cafetería Origen. El proyecto incluye la actualización del Backend REST desarrollado en el Parcial I e implementa el Frontend en React utilizando Vite, TypeScript y una suite de pruebas automatizadas siguiendo la metodología TDD (Rojo -> Verde -> Refactor).
+**Programación IV — Tecnicatura Universitaria en Programación**
 
-## Stack Tecnológico
+## Descripción del proyecto
 
-* Node.js (v20.12.2 / v20+)
-* TypeScript (modo estricto, "strict": true)
-* Backend: Express, SQLite
-* Frontend: React, Vite (v7), SASS, Bootstrap
-* Validación: Zod (v4)
-* Testing Unitario y Componentes: Vitest (v3), React Testing Library, jsdom (v25.0.1)
-* Testing de Integración: MSW (v2)
-* Testing End-to-End: Playwright
+Cafetería Origen es una aplicación web que permite consultar el menú de una cafetería, seleccionar productos, agregarlos a un carrito y confirmar pedidos.
 
-## Instalación
+El sistema está dividido en un frontend desarrollado con React y TypeScript y una API REST desarrollada con Node.js, Express y TypeScript.
 
-1. Clonar el repositorio e ingresar a la carpeta raíz del proyecto.
-2. Instalar dependencias en el backend:
-   ```bash
-   cd backend
-   npm install
-   ```
-3. Instalar dependencias en el frontend:
-   ```bash
-   cd ../frontend
-   npm install
-   ```
+El proyecto incorpora pruebas automatizadas, desarrollo guiado por tests (TDD), validación de datos, control de versiones con Git y ejecución mediante Docker Compose.
 
-## Ejecución en Desarrollo
+## Tecnologías utilizadas
 
-### Servidor Backend
-Desde la carpeta `backend`:
-```bash
-npm run dev
+### Backend
+
+* Node.js
+
+* Express
+
+* TypeScript
+
+* Vitest
+
+* API REST
+
+### Frontend
+
+* React
+
+* TypeScript
+
+* Vite
+
+* Zod
+
+* React Context API
+
+* `useReducer`
+
+### Testing
+
+* Vitest
+
+* React Testing Library
+
+* Testing Library User Event
+
+* MSW 2 (Mock Service Worker)
+
+* Playwright (pruebas E2E)
+
+### Herramientas
+
+* Git y GitHub
+
+* Docker
+
+* Docker Compose
+
+## Estructura general
+
 ```
-El backend quedará escuchando en `http://localhost:3000`.
-
-### Cliente Frontend
-Desde la carpeta `frontend`:
-```bash
-npm run dev
-```
-La aplicación web se ejecutará en `http://localhost:5173`.
-
----
-
-## Comandos de Testing
-
-### Frontend (`/frontend`)
-
-* `npm test`: Ejecuta la suite completa de pruebas unitarias, de componentes e integración mediante Vitest en una sola pasada (sin requerir el backend levantado).
-* `npm run test:watch`: Ejecuta Vitest en modo interactivo (watch).
-* `npm run test:e2e`: Ejecuta las pruebas End-to-End con Playwright sobre frontend y backend reales.
-
-### Backend (`/backend`)
-
-* `npm test`: Ejecuta los tests unitarios y de integración del servidor HTTP.
-
----
-
-## Estructura del Proyecto
-
-```text
 TP3-ProgIV/
 ├── backend/
 │   ├── src/
-│   │   ├── data/            # Datos en memoria (catalogo.ts)
-│   │   ├── models/          # Modelos de dominio (Producto, Cafe, Pedido, etc.)
-│   │   ├── routes/          # Rutas y controladores (productos, pedidos, reportes)
-│   │   ├── services/        # Lógica de negocio (ProductoService, PedidoService)
-│   │   └── app.ts           # Configuración de Express y CORS
-│   └── tests/               # Tests unitarios, integración y e2e del backend
-└── frontend/
-    ├── src/
-    │   ├── api/             # Cliente HTTP centralizado (client.ts)
-    │   ├── components/      # Componentes UI (SelectorCafe, Pasteleria, Carrito)
-    │   ├── context/         # Estado global (CarritoContext.tsx)
-    │   ├── reducers/        # Lógica del estado (carritoReducer.ts)
-    │   ├── schemas/         # Validación de contratos Zod (producto.schema.ts)
-    │   ├── utils/           # Funciones puras (mesa.ts, format.ts)
-    │   └── tests/           # Suite de pruebas frontend
-    │       ├── unit/        # Pruebas unitarias de funciones puras y reducers
-    │       ├── components/  # Pruebas de renderizado e interacción de componentes
-    │       └── integration/ # Pruebas de integración con MSW 2
-    └── e2e/                 # Pruebas End-to-End con Playwright
+│   ├── tests/
+│   ├── Dockerfile
+│   └── package.json
+│
+├── frontend/
+│   ├── e2e/
+│   │   └── cafeteria.e2e.spec.ts
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── reducers/
+│   │   ├── schemas/
+│   │   └── tests/
+│   │       ├── unit/
+│   │       ├── components/
+│   │       └── integration/
+│   ├── playwright.config.ts
+│   ├── Dockerfile
+│   ├── .dockerignore
+│   └── package.json
+│
+├── docker-compose.yaml
+└── README.md
+
 ```
 
----
+## Ejecución con Docker Compose
 
-## Contrato de la API
+Esta es la forma recomendada de levantar la aplicación completa en un entorno local.
 
-La comunicación entre el Frontend y el Backend se rige por las siguientes especificaciones y esquemas de validación Zod.
+### Requisitos
 
-### 1. Obtener Productos
-* Endpoint: `GET /productos`
-* Respuesta `200 OK`: Arreglo de productos.
+* Docker Desktop instalado y en ejecución.
 
-Ejemplo de respuesta:
-```json
-[
-  {
-    "id": 5,
-    "tipo": "expreso",
-    "nombre": "Expreso Mediano",
-    "tamano": "Mediano",
-    "gramos": 27,
-    "variedad": "Colombia",
-    "precio": 7360
-  },
-  {
-    "id": 19,
-    "tipo": "pasteleria",
-    "nombre": "Muffin de chocolate",
-    "precio": 2500
-  }
-]
+* Docker Compose disponible.
+
+### Levantar la aplicación
+
+Desde la raíz del proyecto:
+
+```
+docker compose up --build -d
+
 ```
 
-Esquema Zod de validación en Frontend:
-```typescript
-import { z } from 'zod';
+El comando construye y levanta dos contenedores:
 
-export const ProductoSchema = z.object({
-  id: z.number(),
-  tipo: z.enum(['expreso', 'filtrado', 'pasteleria']),
-  nombre: z.string(),
-  tamano: z.string().optional(),
-  gramos: z.number().optional(),
-  variedad: z.string().optional(),
-  precio: z.number()
-});
+| Servicio | Tecnología | Dirección | 
+| ----- | ----- | ----- | 
+| Backend | Express + TypeScript | http://localhost:3000 | 
+| Frontend | React + Vite | http://localhost:5173 | 
 
-export const ListadoProductosSchema = z.array(ProductoSchema);
+### Verificar los contenedores
 
-export type Producto = z.infer<typeof ProductoSchema>;
+```
+docker compose ps
+
 ```
 
-### 2. Crear Pedido
-* Endpoint: `POST /pedidos`
-* Cuerpo de la petición (`mesaId` opcional, si no se envía o es inválido equivale a retiro por barra):
-```json
+### Consultar los registros
+
+```
+docker compose logs -f
+
+```
+
+### Detener la aplicación
+
+```
+docker compose down
+
+```
+
+### Comprobación
+
+Al abrir `http://localhost:5173`, el usuario puede consultar el menú, agregar productos al carrito y confirmar un pedido.
+
+La API se encuentra disponible en `http://localhost:3000`.
+
+El endpoint `GET /productos` devuelve un catálogo de 20 productos en la configuración comprobada durante el desarrollo.
+
+## Ejecución sin Docker
+
+### Backend
+
+Desde la carpeta `backend`:
+
+```
+npm install
+npm run dev
+
+```
+
+La API quedará disponible en `http://localhost:3000`.
+
+### Frontend
+
+Desde la carpeta `frontend`:
+
+```
+npm install
+npm run dev
+
+```
+
+Abrir:
+
+`http://localhost:5173`
+
+El cliente HTTP utiliza la variable de entorno `VITE_API_URL`. Si no está definida, utiliza:
+
+`http://localhost:3000`
+
+## Funcionalidades implementadas
+
+### Menú
+
+* Consultar los productos disponibles mediante `GET /productos`.
+
+* Visualizar cafés expresos, cafés filtrados y productos de pastelería.
+
+* Seleccionar bebida, tamaño y origen del café.
+
+* Mostrar estados de carga, éxito y error.
+
+* Validar la respuesta de la API mediante Zod (discriminated unions).
+
+### Carrito
+
+* Agregar productos.
+
+* Aumentar cantidades.
+
+* Disminuir cantidades.
+
+* Eliminar productos.
+
+* Calcular el total orientativo.
+
+* Conservar los productos cuando la confirmación del pedido falla.
+
+* Vaciar el carrito cuando el pedido se confirma correctamente.
+
+### Pedidos
+
+* Enviar pedidos mediante `POST /pedidos`.
+
+* Enviar los identificadores de productos y sus cantidades.
+
+* Permitir pedidos para retiro en barra o asignación de mesa (`mesaId`).
+
+* Mostrar confirmación cuando el servidor acepta el pedido.
+
+* Mostrar mensajes de error cuando la API rechaza la solicitud.
+
+* Permitir reintentar después de un error HTTP 400 o 500.
+
+## Contrato HTTP utilizado por el frontend
+
+### GET /productos
+
+Obtiene el catálogo de productos disponibles.
+
+**Respuesta exitosa:** HTTP 200 con un arreglo de productos.
+
+El frontend valida la estructura de la respuesta mediante `ListadoProductosSchema` de Zod.
+
+### POST /pedidos
+
+Permite registrar un pedido.
+
+**Ejemplo de solicitud:**
+
+```
 {
-  "mesaId": 4,
   "items": [
-    { "productoId": 5, "cantidad": 2 },
-    { "productoId": 19, "cantidad": 1 }
-  ]
-}
-```
-* Respuesta `201 Created`:
-```json
-{
-  "id": 102,
-  "mesaId": 4,
-  "estado": "pendiente",
-  "items": [
-    { "productoId": 5, "cantidad": 2 },
-    { "productoId": 19, "cantidad": 1 }
+    {
+      "productoId": 1,
+      "cantidad": 2
+    }
   ],
-  "total": 17220
+  "mesaId": 4
 }
+
 ```
 
-### 3. Consultar Estado de Pedido
-* Endpoint: `GET /pedidos/:id`
-* Respuesta `200 OK`:
-```json
-{
-  "id": 102,
-  "mesaId": 4,
-  "estado": "en_preparacion",
-  "items": [
-    { "productoId": 5, "cantidad": 2 },
-    { "productoId": 19, "cantidad": 1 }
-  ],
-  "total": 17220
-}
+**Respuesta exitosa:** HTTP 201 con los datos del pedido creado.
+
+**Posibles errores:** solicitudes inválidas (HTTP 400) o errores internos del servidor (HTTP 500).
+
+En caso de error, el frontend informa el problema y conserva los productos del carrito.
+
+### GET /pedidos/:id
+
+Permite consultar un pedido por su identificador.
+
+La estructura exacta de respuesta y los códigos de error se mantienen sincronizados con la implementación del backend.
+
+## Estrategia de testing
+
+El proyecto utiliza pruebas automatizadas para verificar el comportamiento de las distintas partes de la aplicación.
+
+### 1. Tests unitarios
+
+Se utilizan para comprobar funciones y reglas de negocio de forma aislada.
+
+Entre las funcionalidades verificadas en el frontend se encuentran:
+
+* Agregar productos al carrito.
+
+* Aumentar y disminuir cantidades.
+
+* Eliminar productos.
+
+* Calcular el total.
+
+* Validaciones y utilidades del frontend (manejo de mesa y estado de cliente).
+
+### 2. Tests de componentes
+
+Se utilizan React Testing Library y Vitest para verificar la interfaz y las interacciones del usuario.
+
+Se prueban componentes como:
+
+* `App`
+
+* `Carrito`
+
+* `CarritoContext`
+
+* `SelectorCafe`
+
+* `Pasteleria`
+
+### 3. Tests de integración — MSW 2
+
+Se utiliza MSW 2 para interceptar solicitudes HTTP y simular respuestas de la API sin necesitar el backend en ejecución.
+
+**Integración del menú:**
+
+1. Carga exitosa de productos mediante HTTP 200.
+
+2. Manejo de un error HTTP 500.
+
+3. Manejo de errores de conexión.
+
+4. Rechazo de respuestas que incumplen el contrato de Zod.
+
+**Integración de pedidos:**
+
+1. Confirmación exitosa de un pedido mediante HTTP 201.
+
+2. Verificación de los identificadores y cantidades enviados.
+
+3. Conservación del carrito ante un error HTTP 400.
+
+4. Reintento de confirmación después de un error HTTP 500.
+
+### 4. Tests End-to-End — Playwright
+
+Las pruebas End-to-End están ubicadas en `frontend/e2e/cafeteria.e2e.spec.ts` para evitar colisiones con el runner de Vitest. Se conectan contra la API REST real del backend para verificar el flujo completo del cliente.
+
+**Preparación del entorno de pruebas:**
+En el gancho `beforeEach`, el test interactúa directamente con los endpoints de prueba de la API (`POST /__test__/reset` y `POST /__test__/seed`) para garantizar un estado limpio e idéntico antes de cada escenario.
+
+**Escenarios implementados:**
+
+1. **Flujo feliz:** Simula el ingreso mediante código QR en la Mesa 4 (`/?mesa=4`), valida el encabezado de la cafetería, configura un café expreso mediano de origen Colombia, agrega productos de pastelería, verifica el resumen en el carrito y efectúa la confirmación exitosa del pedido.
+
+2. **Validación de carrito vacío:** Verifica que si el usuario navega a la mesa sin ítems seleccionados, el sistema inhabilite y no adjunte el botón de confirmación de pedido.
+
+**Ejecución de los tests E2E:**
+
+1. Asegurar que el backend esté ejecutándose en `http://localhost:3000`:
+
+   ```
+   cd backend
+   npm run dev
+   
+   ```
+
+2. Desde la carpeta `frontend`, ejecutar Playwright:
+
+   ```
+   npx playwright test
+   
+   ```
+
+3. (Opcional) Ejecutar en modo interfaz gráfica interactiva:
+
+   ```
+   npx playwright test --ui
+   
+   ```
+
+### Resumen de resultados de pruebas
+
+| Tipo de pruebas | Herramienta | Resultado | 
+| ----- | ----- | ----- | 
+| Pruebas Unitarias | Vitest | Aprobadas | 
+| Componentes de UI | React Testing Library + Vitest | Aprobadas | 
+| Integración (API Mocks) | MSW 2 + Vitest | 7 aprobadas | 
+| Pruebas End-to-End (E2E) | Playwright | 2 aprobadas | 
+| **Total Suite Frontend** | **Vitest + Playwright** | **40 pruebas aprobadas (100%)** | 
+
+### Ejecutar las pruebas del frontend
+
+Desde la carpeta `frontend`:
+
+```
+npm test
+
 ```
 
-### 4. Formato Estándar de Errores
-Cualquier error devuelto por la API responde con código HTTP 4xx o 5xx y la siguiente estructura JSON:
-```json
-{
-  "error": "Mensaje descriptivo del error"
-}
+Ejecutar únicamente los tests de integración del menú:
+
+```
+npx vitest run src/tests/integration/Menu.integration.test.tsx
+
 ```
 
----
+Ejecutar únicamente los tests de integración de pedidos:
 
-## Flujo de Trabajo TDD y Commits
+```
+npx vitest run src/tests/integration/Pedido.integration.test.tsx
 
-El desarrollo de cada funcionalidad respeta estrictamente el ciclo Red -> Green -> Refactor:
-1. **Commit Rojo:** Contiene la prueba automatizada que falla antes de implementar la funcionalidad.
-   * Ejemplo: `test: agrega prueba unitaria para lectura de mesa desde url (rojo)`
-2. **Commit Verde:** Contiene el código fuente que hace pasar la prueba en verde.
-   * Ejemplo: `feat: implementa obtencion de mesa desde parametros url (verde)`
+```
+
+### Verificar la compilación
+
+```
+npm run build
+
+```
+
+Este comando ejecuta las comprobaciones de TypeScript y genera la versión de producción mediante Vite.
+
+## Desarrollo guiado por tests (TDD)
+
+Durante el desarrollo se utilizó el ciclo:
+
+**ROJO → VERDE → REFACTOR**
+
+* **ROJO:** escribir un test que falle porque todavía no existe la funcionalidad.
+
+* **VERDE:** implementar el código necesario para que el test apruebe.
+
+* **REFACTOR:** mejorar la estructura sin modificar el comportamiento.
+
+### Ejemplo: confirmación de pedidos
+
+Se trabajó mediante commits independientes:
+
+| Etapa | Commit | 
+| ----- | ----- | 
+| ROJO | `574520a` | 
+| VERDE | `0208db6` | 
+| REFACTOR | `e74017d` | 
+
+En el refactor se separaron las responsabilidades del contexto del carrito, el proveedor y el hook `useCarrito`, manteniendo los tests aprobados.
+
+## Control de versiones
+
+El proyecto utiliza Git y GitHub para gestionar los cambios.
+
+Los desarrollos se realizan en ramas de trabajo y se integran mediante Pull Requests.
+
+La rama compartida de integración del equipo es `dev`.
+
+## Verificación funcional realizada
+
+Durante la verificación final se comprobó que:
+
+* Ambos contenedores de Docker Compose se construyen y ejecutan simultáneamente.
+
+* El backend responde correctamente a `GET /productos`.
+
+* El frontend muestra el catálogo obtenido desde Express con tipado en discriminated unions.
+
+* El usuario puede agregar y modificar productos en el carrito.
+
+* Un pedido se confirma correctamente contra la API real.
+
+* Las 38 pruebas unitarias/componentes/integración (Vitest/MSW 2) aprueban al 100%.
+
+* Las 2 pruebas E2E (Playwright) aprueban al 100%.
+
+* La compilación de producción (`npm run build`) finaliza sin errores de TypeScript.
