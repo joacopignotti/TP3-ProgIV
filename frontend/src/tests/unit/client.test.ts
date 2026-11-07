@@ -2,22 +2,17 @@ import { describe, it, expect, vi } from 'vitest';
 import { obtenerProductos } from '../../api/client.ts';
 
 describe('obtenerProductos', () => {
-    it('devuelve los productos cuando la API responde correctamente', async () => {
-        const mockProductos = [
-        {
-            id: 5,
-            tipo: 'expreso',
-            nombre: 'Expreso Mediano',
-            precio: 7360,
-        },
-        ];
+    it('debe retornar la lista de productos validada correctamente por Zod', async () => {
+        const mockData = [
+        { id: 1, tipo: 'expreso', nombre: 'Café Expreso', precio: 3000 }
+    ];
 
-        vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+    vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
         ok: true,
-        json: async () => mockProductos,
-        }));
+        json: async () => mockData,
+        } as Response);
 
-        const resultado = await obtenerProductos();
-        expect(resultado).toEqual(mockProductos);
+        const productos = await obtenerProductos();
+        expect(productos).toEqual(mockData);
     });
 });
