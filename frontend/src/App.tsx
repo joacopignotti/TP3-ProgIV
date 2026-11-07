@@ -8,44 +8,66 @@ import SelectorCafe from "./components/SelectorCafe";
 import Carrito from "./components/Carrito";
 
 import { obtenerProductos } from "./api/client";
-import type { Producto } from "./schemas/producto.schema";
+import type { EstadoMenu } from "./schemas/producto.schema";
 
 function Contenido() {
   const { agregarProducto } = useCarrito();
 
-  const [productos, setProductos] = useState<Producto[]>([]);
-  const [error, setError] = useState("");
-  const [cargando, setCargando] = useState(true);
+  const [estadoMenu, setEstadoMenu] = useState<EstadoMenu>({
+    status: "cargando",
+  });
 
   useEffect(() => {
+    let activo = true;
+
     obtenerProductos()
-      .then((datos) => {
-        setProductos(datos);
+      .then((productos) => {
+        if (activo) {
+          setEstadoMenu({
+            status: "listo",
+            productos,
+          });
+        }
       })
-      .catch((error) => {
-        setError(error.message);
-      })
-      .finally(() => {
-        setCargando(false);
+      .catch((error: unknown) => {
+        if (activo) {
+          setEstadoMenu({
+            status: "error",
+            mensaje:
+              error instanceof Error
+                ? error.message
+                : "Error desconocido al cargar el menú",
+          });
+        }
       });
+
+    return () => {
+      activo = false;
+    };
   }, []);
 
-  const productosCafe = productos.filter(
+  if (estadoMenu.status === "cargando") {
+    return <p role="status">Cargando productos...</p>;
+  }
+
+  if (estadoMenu.status === "error") {
+    return (
+      <p role="alert">
+        Error al cargar los productos: {estadoMenu.mensaje}
+      </p>
+    );
+  }
+
+  // En este punto, TypeScript sabe que el estado es "listo".
+  const productosCafe = estadoMenu.productos.filter(
     (producto) =>
-      producto.tipo === "expreso" || producto.tipo === "filtrado"
+      producto.tipo === "expreso" ||
+      producto.tipo === "filtrado"
   );
 
-  const productosPasteleria = productos.filter(
+  const productosPasteleria = estadoMenu.productos.filter(
     (producto) => producto.tipo === "pasteleria"
   );
-
-  if (cargando) {
-    return <p>Cargando productos...</p>;
-  }
-
-  if (error) {
-    return <p>Error al cargar los productos: {error}</p>;
-  }
 
   return (
     <main>
@@ -75,6 +97,3 @@ function App() {
 }
 
 export default App;
-
-
-
