@@ -1,7 +1,8 @@
 
 import { describe, it, expect } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { CarritoProvider, useCarrito } from "../../context/CarritoContext";
+import { CarritoProvider } from "../../context/CarritoContext";
+import { useCarrito } from "../../context/useCarrito";
 import Carrito from "../../components/Carrito";
 
 const cafe = {

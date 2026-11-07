@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CarritoProvider, useCarrito } from "../../context/CarritoContext";
+import { CarritoProvider } from "../../context/CarritoContext";
+import { useCarrito } from "../../context/useCarrito";
 import { describe, it, expect } from "vitest";
 function ComponentePrueba() {
   const {
