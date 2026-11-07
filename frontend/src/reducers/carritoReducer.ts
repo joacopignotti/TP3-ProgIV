@@ -1,3 +1,4 @@
+
 export type Producto = {
   id: number;
   nombre: string;
@@ -12,7 +13,8 @@ export type ItemCarrito = {
 type AccionCarrito =
   | { type: "AGREGAR"; producto: Producto }
   | { type: "RESTAR"; productoId: number }
-  | { type: "ELIMINAR"; productoId: number };
+  | { type: "ELIMINAR"; productoId: number }
+  | { type: "VACIAR" };
 
 export function carritoReducer(
   estado: ItemCarrito[],
@@ -49,9 +51,10 @@ export function carritoReducer(
         (item) => item.producto.id !== accion.productoId
       );
 
+    case "VACIAR":
+      return [];
+
     default:
       return estado;
   }
 }
-
-
