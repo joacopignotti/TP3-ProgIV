@@ -117,4 +117,96 @@ describe("Integración - confirmación de pedidos con MSW", () => {
       await screen.findByText(/pedido confirmado/i)
     ).toBeInTheDocument();
   });
+  it("conserva el carrito cuando la API rechaza el pedido con HTTP 400", async () => {
+  server.use(
+    http.post(`${API_URL}/pedidos`, () => {
+      return HttpResponse.json(
+        { error: "Producto inválido" },
+        { status: 400 }
+      );
+    })
+  );
+
+  const user = userEvent.setup();
+  renderCarrito();
+
+  await user.click(
+    screen.getByRole("button", { name: "Agregar café" })
+  );
+
+  await user.click(
+    screen.getByRole("button", { name: /confirmar pedido/i })
+  );
+
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "Producto inválido"
+  );
+
+  expect(
+    screen.getByText("Expreso Pocillo Brasil")
+  ).toBeInTheDocument();
+
+  expect(
+    screen.getByRole("button", { name: /confirmar pedido/i })
+  ).toBeEnabled();
+});
+it("permite reintentar el pedido después de un error HTTP 500", async () => {
+  let intentos = 0;
+
+  server.use(
+    http.post(`${API_URL}/pedidos`, () => {
+      intentos++;
+
+      if (intentos === 1) {
+        return HttpResponse.json(
+          { error: "Error interno del servidor" },
+          { status: 500 }
+        );
+      }
+
+      return HttpResponse.json(
+        {
+          id: 2,
+          estado: "pendiente",
+          total: 5020,
+          mesaId: null,
+        },
+        { status: 201 }
+      );
+    })
+  );
+
+  const user = userEvent.setup();
+  renderCarrito();
+
+  await user.click(
+    screen.getByRole("button", { name: "Agregar café" })
+  );
+
+  await user.click(
+    screen.getByRole("button", { name: /confirmar pedido/i })
+  );
+
+  expect(await screen.findByRole("alert")).toHaveTextContent(
+    "Error interno del servidor"
+  );
+
+  expect(
+    screen.getByText("Expreso Pocillo Brasil")
+  ).toBeInTheDocument();
+
+  await user.click(
+    screen.getByRole("button", { name: /confirmar pedido/i })
+  );
+
+  expect(
+    await screen.findByText(/pedido confirmado/i)
+  ).toBeInTheDocument();
+
+  expect(intentos).toBe(2);
+
+  expect(
+    screen.getByText("Tu carrito está vacío")
+  ).toBeInTheDocument();
+});
 });
