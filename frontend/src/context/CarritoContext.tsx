@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useReducer } from "react";
 import {
   carritoReducer,
@@ -10,6 +11,7 @@ type CarritoContextType = {
   agregarProducto: (producto: Producto) => void;
   restarProducto: (productoId: number) => void;
   eliminarProducto: (productoId: number) => void;
+  vaciarCarrito: () => void;
 };
 
 const CarritoContext = createContext<CarritoContextType | undefined>(
@@ -35,6 +37,10 @@ export function CarritoProvider({ children }: CarritoProviderProps) {
     dispatch({ type: "ELIMINAR", productoId });
   };
 
+  const vaciarCarrito = () => {
+    dispatch({ type: "VACIAR" });
+  };
+
   return (
     <CarritoContext.Provider
       value={{
@@ -42,6 +48,7 @@ export function CarritoProvider({ children }: CarritoProviderProps) {
         agregarProducto,
         restarProducto,
         eliminarProducto,
+        vaciarCarrito,
       }}
     >
       {children}
@@ -58,5 +65,3 @@ export function useCarrito() {
 
   return context;
 }
-
-

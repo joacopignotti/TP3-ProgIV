@@ -1,4 +1,3 @@
-
 import {
   beforeAll,
   afterAll,
@@ -6,10 +5,9 @@ import {
   describe,
   expect,
   it,
-  waitFor,
 } from "vitest";
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { http, HttpResponse } from "msw";
