@@ -13,3 +13,8 @@ export const ProductoSchema = z.object({
 export const ListadoProductosSchema = z.array(ProductoSchema);
 
 export type Producto = z.infer<typeof ProductoSchema>;
+
+export type EstadoMenu =
+    | { status: 'cargando' }
+    | { status: 'error'; mensaje: string }
+    | { status: 'listo'; productos: Producto[] };
