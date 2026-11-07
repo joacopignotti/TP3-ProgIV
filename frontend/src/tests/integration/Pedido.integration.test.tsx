@@ -13,10 +13,8 @@ import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 
-import {
-  CarritoProvider,
-  useCarrito,
-} from "../../context/CarritoContext";
+import { CarritoProvider } from "../../context/CarritoContext";
+import { useCarrito } from "../../context/useCarrito";
 
 import Carrito from "../../components/Carrito";
 

@@ -1,8 +1,9 @@
 
 import { useEffect, useState } from "react";
 import "./App.css";
+import { CarritoProvider } from "./context/CarritoContext";
+import { useCarrito } from "./context/useCarrito";
 
-import { CarritoProvider, useCarrito } from "./context/CarritoContext";
 import Pasteleria from "./components/Pasteleria";
 import SelectorCafe from "./components/SelectorCafe";
 import Carrito from "./components/Carrito";
