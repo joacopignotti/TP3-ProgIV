@@ -10,12 +10,12 @@ export interface ProductoDTO {
     tipo: string;
     precioBase: number;
     precio: number;
-    origen: Origen;
+    origen?: Origen;
     [campo: string]: unknown;
 }
 
 export abstract class Producto {
-  constructor(readonly id: number, readonly nombre: string, readonly precioBase: number, readonly origen: Origen) {}
+  constructor(readonly id: number, readonly nombre: string, readonly precioBase: number, readonly origen?: Origen) {}
   abstract get tipo(): string;
   abstract calcularPrecio(): number;
   toDTO(): ProductoDTO {
@@ -25,7 +25,7 @@ export abstract class Producto {
             tipo: this.tipo,
             precioBase: this.precioBase,
             precio: this.calcularPrecio(),
-            origen: this.origen
+            ...(this.origen ? { origen: this.origen } : {})
         };
     }
 }

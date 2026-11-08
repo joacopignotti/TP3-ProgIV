@@ -1,6 +1,6 @@
 
 import request from "supertest";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { crearApp } from "../../src/app.js";
 
 const EXPRESO_POCILLO_BRASIL = 1; // $5.020
@@ -8,6 +8,8 @@ const MUFFIN = 19; // $2.500
 
 describe("API Cafetería Origen (integración)", () => {
   let app: ReturnType<typeof crearApp>;
+
+  beforeAll(() => { process.env.NODE_ENV = "test"; });
 
   beforeEach(() => {
     app = crearApp();

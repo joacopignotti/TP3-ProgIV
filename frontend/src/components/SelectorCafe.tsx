@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import type { Producto } from "../schemas/producto.schema";
 
@@ -81,7 +80,12 @@ function SelectorCafe({ productos, onAgregar }: SelectorCafeProps) {
                 onChange={() => setOrigen(producto.variedad ?? "")}
               />
 
-              {producto.variedad} - ${producto.precio.toLocaleString("es-AR")}
+              <span>
+                {producto.variedad} - ${producto.precio.toLocaleString("es-AR")}
+                {producto.origen && <small className="notas-origen">
+                  Acidez: {producto.origen.acidez}; cuerpo: {producto.origen.cuerpo}; notas: {producto.origen.notas}
+                </small>}
+              </span>
             </label>
           ))}
 
@@ -103,3 +107,4 @@ function SelectorCafe({ productos, onAgregar }: SelectorCafeProps) {
 }
 
 export default SelectorCafe;
+

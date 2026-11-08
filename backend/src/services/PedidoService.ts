@@ -2,6 +2,7 @@
 import { Pedido, type ItemPedido } from "../models/Pedido.js";
 import { NotFoundError, ValidationError } from "../errors/index.js";
 import type { ProductoService } from "./ProductoService.js";
+import { obtenerMesasValidas } from "../config/mesas.js";
 
 export class PedidoService {
   private pedidos: Pedido[] = [];
@@ -67,6 +68,10 @@ export class PedidoService {
       throw new ValidationError(
         "mesaId debe ser un entero mayor o igual a 1",
       );
+    }
+
+    if (!obtenerMesasValidas().has(mesaId)) {
+      throw new ValidationError(`La mesa ${mesaId} no existe`);
     }
 
     return mesaId;

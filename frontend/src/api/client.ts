@@ -1,63 +1,57 @@
-import { ListadoProductosSchema, type Producto } from '../schemas/producto.schema';
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+import {
+  ListadoProductosSchema,
+  type Producto,
+} from "../schemas/producto.schema";
 
-export async function obtenerProductos(): Promise<Producto[]> {
-    const response = await fetch(`${API_BASE_URL}/productos`);
+import {
+  PedidoSchema,
+  type Pedido,
+} from "../schemas/pedido.schema";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Error al cargar los productos');
-    }
-
-    const rawData = await response.json();
-    const resultado = ListadoProductosSchema.safeParse(rawData);
-
-    if (!resultado.success) {
-        throw new Error('La respuesta de la API no cumple el contrato esperado');
-    }
-
-    return resultado.data;
+async function solicitar(path: string, init?: RequestInit): Promise<unknown> {
+  const response = await fetch(`${API_BASE_URL}${path}`, init);
+  if (!response.ok) {
+    const data: unknown = await response.json().catch(() => ({}));
+    const mensaje =
+      typeof data === "object" && data !== null && "error" in data &&
+      typeof data.error === "string" ? data.error :
+      typeof data === "object" && data !== null && "message" in data &&
+      typeof data.message === "string" ? data.message :
+      `Error HTTP ${response.status}`;
+    throw new Error(mensaje);
+  }
+  return response.json() as Promise<unknown>;
 }
 
-export type ItemPedido = {
-  productoId: number;
-  cantidad: number;
-};
-
-export type CrearPedidoRequest = {
-  items: ItemPedido[];
-  mesaId: number | null;
-};
-
-export type PedidoCreado = {
-  id: number;
-  estado: string;
-  total: number;
-  mesaId: number | null;
-};
-
-export async function crearPedido(
-  pedido: CrearPedidoRequest
-): Promise<PedidoCreado> {
-  const response = await fetch(`${API_BASE_URL}/pedidos`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(pedido),
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-
-    throw new Error(
-      typeof errorData.error === "string"
-        ? errorData.error
-        : typeof errorData.message === "string"
-          ? errorData.message
-          : "No se pudo confirmar el pedido"
-    );
+export async function obtenerProductos(): Promise<Producto[]> {
+  const resultado = ListadoProductosSchema.safeParse(await solicitar("/productos"));
+  if (!resultado.success) {
+    throw new Error("La respuesta de la API no cumple el contrato esperado");
   }
+  return resultado.data;
+}
 
-  return (await response.json()) as PedidoCreado;
+export type ItemPedido = { productoId: number; cantidad: number };
+export type CrearPedidoRequest = { items: ItemPedido[]; mesaId: number | null };
+export type PedidoCreado = Pedido;
+
+function validarPedido(data: unknown): Pedido {
+  const resultado = PedidoSchema.safeParse(data);
+  if (!resultado.success) {
+    throw new Error("La respuesta del pedido no cumple el contrato esperado");
+  }
+  return resultado.data;
+}
+
+export async function crearPedido(pedido: CrearPedidoRequest): Promise<Pedido> {
+  return validarPedido(await solicitar("/pedidos", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(pedido),
+  }));
+}
+
+export async function obtenerPedido(id: number): Promise<Pedido> {
+  return validarPedido(await solicitar(`/pedidos/${id}`));
 }
