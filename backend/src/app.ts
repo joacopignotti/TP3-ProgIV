@@ -1,4 +1,5 @@
 import express, { type ErrorRequestHandler } from "express";
+import cors from "cors";
 import { crearCatalogo } from "./data/catalogo.js";
 import { NotFoundError, ValidationError } from "./errors/index.js";
 import { makePedidosRouter } from "./routes/pedidos.js";
@@ -7,29 +8,18 @@ import { makeReportesRouter } from "./routes/reportes.js";
 import { PedidoService } from "./services/PedidoService.js";
 import { ProductoService } from "./services/ProductoService.js";
 import { ReporteService } from "./services/ReporteService.js";
-import  cors  from "cors";
-import { error } from "console";
 
 const manejarErrores: ErrorRequestHandler = (err, _req, res, _next) => {
-  if (err instanceof ValidationError) {
-    res.status(400).json({ error: err.message });
-  } else if (err instanceof NotFoundError) {
-    res.status(404).json({ error: err.message });
-  } else if (err instanceof SyntaxError) {
-    res.status(400).json({ error: "JSON inválido" });
-  } else {
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
+  if (err instanceof ValidationError) res.status(400).json({ error: err.message });
+  else if (err instanceof NotFoundError) res.status(404).json({ error: err.message });
+  else if (err instanceof SyntaxError) res.status(400).json({ error: "JSON inválido" });
+  else res.status(500).json({ error: "Error interno del servidor" });
 };
 
-// Factory: cada llamada arma una app con servicios nuevos, así los tests de
-// integración arrancan siempre con estado limpio. App y server están separados
-// (no hay listen) para que Supertest pueda usar la app sin abrir un puerto.
 export function crearApp() {
   const productoService = new ProductoService(crearCatalogo());
   const pedidoService = new PedidoService(productoService);
   const reporteService = new ReporteService(pedidoService, productoService);
-
   const app = express();
   app.use(cors());
   app.use(express.json());
@@ -38,21 +28,18 @@ export function crearApp() {
   app.use("/pedidos", makePedidosRouter(pedidoService));
   app.use("/reportes", makeReportesRouter(reporteService));
 
-  app.use(manejarErrores);
-
-  if (process.env.NODE_ENV === 'test' || true) {
-    app.post('/__test__/reset', (_req, res) => {
+  // Sólo disponibles durante pruebas; nunca en el modo normal de Docker.
+  if (process.env.NODE_ENV === "test") {
+    app.post("/__test__/reset", (_req, res) => {
       pedidoService.limpiar();
       res.sendStatus(204);
     });
-
-    app.post('/__test__/seed', (_req, res) => {
-      
+    app.post("/__test__/seed", (_req, res) => {
       pedidoService.crear([{ productoId: 1, cantidad: 2 }], null);
       pedidoService.crear([{ productoId: 19, cantidad: 1 }], 4);
-      
-      res.sendStatus(201).json({ message: ['pedidos dinamicos'] });
+      res.status(201).json({ message: "Datos de prueba creados" });
     });
   }
+  app.use(manejarErrores);
   return app;
 }

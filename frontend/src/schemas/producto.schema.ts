@@ -8,6 +8,11 @@ export const ProductoSchema = z.object({
     gramos: z.number().optional(),
     variedad: z.string().optional(),
     precio: z.number(),
+    origen: z.object({
+      acidez: z.string(),
+      cuerpo: z.string(),
+      notas: z.string(),
+    }).optional(),
 });
 
 export const ListadoProductosSchema = z.array(ProductoSchema);

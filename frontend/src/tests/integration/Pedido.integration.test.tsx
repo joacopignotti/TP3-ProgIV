@@ -38,6 +38,7 @@ const server = setupServer(
         estado: "pendiente",
         total: 10040,
         mesaId: null,
+        items: [{ productoId: 1, cantidad: 2 }],
       },
       { status: 201 }
     );
@@ -170,6 +171,7 @@ it("permite reintentar el pedido después de un error HTTP 500", async () => {
           estado: "pendiente",
           total: 5020,
           mesaId: null,
+          items: [{ productoId: 1, cantidad: 1 }],
         },
         { status: 201 }
       );
