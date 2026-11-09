@@ -6,7 +6,10 @@ export function makePedidosRouter(service: PedidoService) {
   const router = Router();
 
   router.post("/", (req, res) => {
-    const pedido = service.crear(req.body?.items);
+    const pedido = service.crear(
+      req.body?.items,
+      req.body?.mesaId
+    );
     res.status(201).json(pedido);
   });
 

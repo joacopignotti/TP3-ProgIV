@@ -1,3 +1,4 @@
+
 export type EstadoPedido = "pendiente" | "entregado";
 
 export interface ItemPedido {
@@ -11,18 +12,20 @@ export class Pedido {
     private readonly _items: readonly ItemPedido[],
     readonly estado: EstadoPedido,
     readonly total: number,
+    readonly mesaId: number | null = null,
   ) {}
 
   get items(): ItemPedido[] {
     return this._items.map((item) => ({ ...item }));
   }
-  
+
   toJSON() {
-        return{
-            id: this.id,
-            items: this.items,
-            estado: this.estado,
-            total: this.total,
-        };
-    }
+    return {
+      id: this.id,
+      items: this.items,
+      estado: this.estado,
+      total: this.total,
+      mesaId: this.mesaId,
+    };
+  }
 }

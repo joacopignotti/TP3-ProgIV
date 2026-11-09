@@ -18,7 +18,7 @@ describe('Clase CafeExpreso', () => {
         expect(expreso.precioBase).toBe(PRECIO_BASE_EXPRESO); // 2500
         expect(expreso.tamano).toBe('Pocillo');
         expect(expreso.variedad).toEqual(mockVariedad);
-        expect(expreso.tipo).toBe('Expreso');
+        expect(expreso.tipo).toBe('expreso');
     });
 
     it('debería retornar la cantidad de gramos correcta según el tamaño "Pocillo"', () => {
@@ -53,7 +53,7 @@ describe('Clase CafeExpreso', () => {
         expect(dto).toEqual({
             id: 1,
             nombre: 'Expreso Pocillo Colombia',
-            tipo: 'Expreso',
+            tipo: 'expreso',
             precioBase: 2500,
             precio: 2680, 
             tamano: 'Pocillo',

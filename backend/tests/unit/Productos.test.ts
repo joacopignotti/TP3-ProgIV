@@ -14,27 +14,45 @@ class ProductoConcretoMock extends Producto {
 }
 
 describe('Clase abstracta Producto', () => {
-    it('debería inicializar correctamente sus propiedades base', () => {
-        const producto = new ProductoConcretoMock(1, 'Café Test', 1000);
+    it('debería inicializar correctamente sus propiedades base y de origen', () => {
+        const producto = new ProductoConcretoMock(1, 'Café Test', 1000, {
+            acidez: 'Media',
+            cuerpo: 'Alto',
+            notas: 'Chocolate y frutos rojos'
+        });
 
         expect(producto.id).toBe(1);
         expect(producto.nombre).toBe('Café Test');
         expect(producto.precioBase).toBe(1000);
         expect(producto.tipo).toBe('MockType');
+        expect(producto.origen).toEqual({
+            acidez: 'Media',
+            cuerpo: 'Alto',
+            notas: 'Chocolate y frutos rojos'
+        });
     });
 
-    it('debería generar correctamente el DTO con el método toDTO()', () => {
-        const producto = new ProductoConcretoMock(2, 'Medialuna Test', 500);
+    it('debería generar correctamente el DTO con el método toDTO() incluyendo el origen', () => {
+        const producto = new ProductoConcretoMock(2, 'Medialuna Test', 500, {
+            acidez: 'Baja',
+            cuerpo: 'Medio',
+            notas: 'Vainilla y manteca'
+        });
         
         const dto = producto.toDTO();
 
-        // Verificamos que el DTO tenga la estructura exacta y el precio calculado
+        // Verificamos que el DTO tenga la estructura exacta, el precio calculado y el origen
         expect(dto).toEqual({
             id: 2,
             nombre: 'Medialuna Test',
             tipo: 'MockType',
             precioBase: 500,
             precio: 550, // 500 * 1.1
+            origen: {
+                acidez: 'Baja',
+                cuerpo: 'Medio',
+                notas: 'Vainilla y manteca'
+            }
         });
     });
 });

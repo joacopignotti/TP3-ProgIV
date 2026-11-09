@@ -1,0 +1,11 @@
+// Paleta de Cafetería Origen. Variables antes de importar Bootstrap.
+$primary: #76513b;
+$secondary: #a17b5d;
+$body-color: #443329;
+$body-bg: #f8f5f1;
+$border-color: #ded2c7;
+$border-radius: .75rem;
+$font-family-sans-serif: Arial, Helvetica, sans-serif;
+
+// Bootstrap compilado con la paleta del proyecto.
+@import "bootstrap/scss/bootstrap";
